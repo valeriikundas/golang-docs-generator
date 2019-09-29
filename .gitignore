@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+go-master/
+docs/
+mkdocs.yml

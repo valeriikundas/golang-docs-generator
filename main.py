@@ -17,11 +17,18 @@ import webbrowser
 
 import click
 
-from builders import (build_doc_files, build_file_structure,
-                      generate_content_files, get_cleaned_from_empty_children)
-from utils import (generate_index_file,
-                   get_lines_above_that_start_with_comment_sign,
-                   get_lines_below_that_start_with_sign, mark_code)
+from builders import (
+    build_doc_files,
+    build_file_structure,
+    generate_content_files,
+    get_cleaned_from_empty_children,
+)
+from utils import (
+    generate_index_file,
+    get_lines_above_that_start_with_comment_sign,
+    get_lines_below_that_start_with_sign,
+    mark_code,
+)
 
 
 @click.command()

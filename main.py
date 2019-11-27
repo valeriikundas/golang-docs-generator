@@ -1,40 +1,50 @@
+# TODO:
+
+# — Змiст, який складається з роздiлiв, що вiдповiдають рiвню пiдкаталогiв вхiдного
+# каталогу з програмними кодами. Кожен роздiл має мiстити власний змiст, кожен
+# елемент якого вказує на документацiю певного пiдкаталогу або файлу.
+
+# — Алфавiтний покажчик, який має мiстити посилання на описи усiх iмен з усiх каталогiв та файлiв.
+
+# classes and methods that belong to them
+
+import datetime
 import os
 import re
 import shutil
 import string
 import webbrowser
-from parser import Parser, build_mkdocs_files
 
-from builders import (
-    build_file_structure,
-    build_mkdocs_structure_string,
-    get_cleaned_from_empty_children,
-)
-from utils import (
-    get_lines_above_that_start_with_comment_sign,
-    get_lines_below_that_start_with_sign,
-    mark_code,
-)
+import click
 
-path = "redis"
-
-docs_path = "docs"
-site_name = "Golang Docs"
-
-if os.path.exists("docs"):
-    shutil.rmtree("docs")
-
-source_code_structure = build_file_structure(path)
-source_code_structure = get_cleaned_from_empty_children(source_code_structure)
-
-mkdocs_config_file_content = build_mkdocs_structure_string(source_code_structure, tab=2)
-with open("mkdocs.yml", "w") as config_file:
-    config_file.write(
-        f"site_name: {site_name}\nnav:\n  - Home: index.md\n{mkdocs_config_file_content}"
-    )
+from builders import (build_doc_files, build_file_structure,
+                      generate_content_files, get_cleaned_from_empty_children)
+from utils import (generate_index_file,
+                   get_lines_above_that_start_with_comment_sign,
+                   get_lines_below_that_start_with_sign, mark_code)
 
 
-build_mkdocs_files(source_code_structure, doc_path=f"docs/{path}")
+@click.command()
+@click.option("--path", help="code folder path")
+@click.option("--output", help="output docs path", default="docs")
+def entrypoint(path, output):
+    code_path = path
+    docs_path = output
 
-webbrowser.open("http://localhost:8000", new=2)
-os.system("mkdocs serve")
+    if os.path.exists(docs_path):
+        shutil.rmtree(docs_path)
+    os.makedirs(docs_path)
+
+    source_code_structure = build_file_structure(code_path)
+    # source_code_structure = get_cleaned_from_empty_children(source_code_structure)
+
+    generate_content_files("", source_code_structure, docs_path, code_path)
+    generate_index_file(docs_path, code_path, source_code_structure)
+
+    build_doc_files(source_code_structure, doc_path=f"{docs_path}/{code_path}")
+
+    # os.system(f"google-chrome {os.path.join(os.getcwd(),'docs/index.html')}")
+
+
+if __name__ == "__main__":
+    entrypoint()

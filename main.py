@@ -45,10 +45,13 @@ def entrypoint(path, output):
     source_code_structure = build_file_structure(code_path)
     # source_code_structure = get_cleaned_from_empty_children(source_code_structure)
 
-    generate_content_files("", source_code_structure, docs_path, code_path)
-    generate_index_file(docs_path, code_path, source_code_structure)
+    names_dict = dict()
+    build_doc_files(
+        source_code_structure, names_dict, doc_path=f"{docs_path}/{code_path}"
+    )
 
-    build_doc_files(source_code_structure, doc_path=f"{docs_path}/{code_path}")
+    generate_content_files("", source_code_structure, docs_path, code_path, names_dict)
+    generate_index_file(docs_path, code_path, source_code_structure)
 
     # os.system(f"google-chrome {os.path.join(os.getcwd(),'docs/index.html')}")
 

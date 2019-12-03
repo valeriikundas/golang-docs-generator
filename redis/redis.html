@@ -1,0 +1,69 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><h3>Functions</h3><pre><code>func SetLogger(logger *log.Logger) 
+</code></pre><pre><code>func pipelineReadCmds(rd *proto.Reader, cmds []Cmder) error 
+</code></pre><pre><code>func txPipelineWriteMulti(wr *proto.Writer, cmds []Cmder) error 
+</code></pre><pre><code>func txPipelineReadQueued(rd *proto.Reader, cmds []Cmder) error 
+</code></pre><pre><code>// NewClient returns a client to the Redis Server specified by Options.
+func NewClient(opt *Options) *Client 
+</code></pre><pre><code>func newConn(ctx context.Context, opt *Options, connPool pool.Pooler) *Conn 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Hook'>Hook</h4>
+type Hook interface {
+	BeforeProcess(ctx context.Context, cmd Cmder) (context.Context, error)
+	AfterProcess(ctx context.Context, cmd Cmder) error
+
+	BeforeProcessPipeline(ctx context.Context, cmds []Cmder) (context.Context, error)
+	AfterProcessPipeline(ctx context.Context, cmds []Cmder) error
+}
+
+
+<h4 id='hooks'>hooks</h4>
+type hooks struct {
+	hooks []Hook
+}
+
+func (hs hooks) Lock() func (hs *hooks) AddHook(hook Hook) func (hs hooks) beforeProcess(ctx context.Context, cmd Cmder) (context.Context, error) func (hs hooks) afterProcess(ctx context.Context, cmd Cmder) error func (hs hooks) beforeProcessPipeline(ctx context.Context, cmds []Cmder) (context.Context, error) func (hs hooks) afterProcessPipeline(ctx context.Context, cmds []Cmder) error 
+<h4 id='baseClient'>baseClient</h4>
+type baseClient struct {
+	opt      *Options
+	connPool pool.Pooler
+	limiter  Limiter
+
+	onClose func() error // hook called when client is closed
+}
+
+func (c *baseClient) String() string func (c *baseClient) newConn(ctx context.Context) (*pool.Conn, error) func (c *baseClient) getConn(ctx context.Context) (*pool.Conn, error) func (c *baseClient) _getConn(ctx context.Context) (*pool.Conn, error) func (c *baseClient) initConn(ctx context.Context, cn *pool.Conn) error func (c *baseClient) releaseConn(cn *pool.Conn, err error) func (c *baseClient) process(ctx context.Context, cmd Cmder) error func (c *baseClient) _process(ctx context.Context, cmd Cmder) error func (c *baseClient) retryBackoff(attempt int) time.Duration func (c *baseClient) cmdTimeout(cmd Cmder) time.Duration func (c *baseClient) Close() error func (c *baseClient) getAddr() string func (c *baseClient) processPipeline(ctx context.Context, cmds []Cmder) error func (c *baseClient) processTxPipeline(ctx context.Context, cmds []Cmder) error 
+<h4 id='pipelineProcessor'>pipelineProcessor</h4>
+type pipelineProcessor func(context.Context, *pool.Conn, []Cmder) (bool, error)
+
+
+<h4 id='Client'>Client</h4>
+// Client is a Redis client representing a pool of zero or more
+// underlying connections. It's safe for concurrent use by multiple
+// goroutines.
+type Client struct {
+	baseClient
+	cmdable
+	hooks
+	ctx context.Context
+}
+
+func (c *Client) Context() context.Context func (c *Client) WithContext(ctx context.Context) *Client func (c *Client) Conn() *Conn func (c *Client) Do(args ...interfacefunc (c *Client) DoContext(ctx context.Context, args ...interfacefunc (c *Client) Process(cmd Cmder) error func (c *Client) ProcessContext(ctx context.Context, cmd Cmder) error func (c *Client) processPipeline(ctx context.Context, cmds []Cmder) error func (c *Client) processTxPipeline(ctx context.Context, cmds []Cmder) error func (c *Client) Options() *Options func (c *Client) SetLimiter(l Limiter) *Client func (c *Client) PoolStats() *PoolStats func (c *Client) Pipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Client) Pipeline() Pipeliner func (c *Client) TxPipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Client) TxPipeline() Pipeliner func (c *Client) pubSub() *PubSub func (c *Client) Subscribe(channels ...string) *PubSub func (c *Client) PSubscribe(channels ...string) *PubSub 
+<h4 id='PoolStats'>PoolStats</h4>
+type PoolStats pool.Stats
+
+
+<h4 id='conn'>conn</h4>
+type conn struct {
+	baseClient
+	cmdable
+	statefulCmdable
+}
+
+
+<h4 id='Conn'>Conn</h4>
+// Conn is like Client, but its pool contains single connection.
+type Conn struct {
+	*conn
+	ctx context.Context
+}
+
+func (c *Conn) Process(cmd Cmder) error func (c *Conn) ProcessContext(ctx context.Context, cmd Cmder) error func (c *Conn) Pipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Conn) Pipeline() Pipeliner func (c *Conn) TxPipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Conn) TxPipeline() Pipeliner </code></pre>

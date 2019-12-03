@@ -1,0 +1,421 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var _ Cmder = (*Cmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*SliceCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*StatusCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*IntCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*IntSliceCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*DurationCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*TimeCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*BoolCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*StringCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*FloatCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*StringSliceCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*BoolSliceCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*StringStringMapCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*StringIntMapCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*StringStructMapCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*XMessageSliceCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*XStreamSliceCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*XPendingCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*XPendingExtCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*XInfoGroupsCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*ZSliceCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*ZWithKeyCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*ScanCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*ClusterSlotsCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*GeoLocationCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*GeoPosCmd)(nil)
+</code></pre><pre><code>var _ Cmder = (*CommandsInfoCmd)(nil)
+</code></pre><h3>Functions</h3><pre><code>func setCmdsErr(cmds []Cmder, e error) 
+</code></pre><pre><code>func cmdsFirstErr(cmds []Cmder) error 
+</code></pre><pre><code>func writeCmd(wr *proto.Writer, cmds ...Cmder) error 
+</code></pre><pre><code>func cmdString(cmd Cmder, val interface}) string 
+</code></pre><pre><code>func cmdFirstKeyPos(cmd Cmder, info *CommandInfo) int 
+</code></pre><pre><code>func NewCmd(args ...interface}) *Cmd 
+</code></pre><pre><code>// Implements proto.MultiBulkParse
+func sliceParser(rd *proto.Reader, n int64) (interface}, error) 
+</code></pre><pre><code>func NewSliceCmd(args ...interface}) *SliceCmd 
+</code></pre><pre><code>func NewStatusCmd(args ...interface}) *StatusCmd 
+</code></pre><pre><code>func NewIntCmd(args ...interface}) *IntCmd 
+</code></pre><pre><code>func NewIntSliceCmd(args ...interface}) *IntSliceCmd 
+</code></pre><pre><code>func NewDurationCmd(precision time.Duration, args ...interface}) *DurationCmd 
+</code></pre><pre><code>func NewTimeCmd(args ...interface}) *TimeCmd 
+</code></pre><pre><code>func NewBoolCmd(args ...interface}) *BoolCmd 
+</code></pre><pre><code>func NewStringCmd(args ...interface}) *StringCmd 
+</code></pre><pre><code>func NewFloatCmd(args ...interface}) *FloatCmd 
+</code></pre><pre><code>func NewStringSliceCmd(args ...interface}) *StringSliceCmd 
+</code></pre><pre><code>func NewBoolSliceCmd(args ...interface}) *BoolSliceCmd 
+</code></pre><pre><code>func NewStringStringMapCmd(args ...interface}) *StringStringMapCmd 
+</code></pre><pre><code>func NewStringIntMapCmd(args ...interface}) *StringIntMapCmd 
+</code></pre><pre><code>func NewStringStructMapCmd(args ...interface}) *StringStructMapCmd 
+</code></pre><pre><code>func NewXMessageSliceCmd(args ...interface}) *XMessageSliceCmd 
+</code></pre><pre><code>// Implements proto.MultiBulkParse
+func xMessageSliceParser(rd *proto.Reader, n int64) (interface}, error) 
+</code></pre><pre><code>// Implements proto.MultiBulkParse
+func stringInterfaceMapParser(rd *proto.Reader, n int64) (interface}, error) 
+</code></pre><pre><code>func NewXStreamSliceCmd(args ...interface}) *XStreamSliceCmd 
+</code></pre><pre><code>func NewXPendingCmd(args ...interface}) *XPendingCmd 
+</code></pre><pre><code>func NewXPendingExtCmd(args ...interface}) *XPendingExtCmd 
+</code></pre><pre><code>func NewXInfoGroupsCmd(stream string) *XInfoGroupsCmd 
+</code></pre><pre><code>func xGroupInfoParser(rd *proto.Reader, n int64) (interface}, error) 
+</code></pre><pre><code>func NewZSliceCmd(args ...interface}) *ZSliceCmd 
+</code></pre><pre><code>func NewZWithKeyCmd(args ...interface}) *ZWithKeyCmd 
+</code></pre><pre><code>func NewScanCmd(process func(cmd Cmder) error, args ...interface}) *ScanCmd 
+</code></pre><pre><code>func NewClusterSlotsCmd(args ...interface}) *ClusterSlotsCmd 
+</code></pre><pre><code>func NewGeoLocationCmd(q *GeoRadiusQuery, args ...interface}) *GeoLocationCmd 
+</code></pre><pre><code>func geoLocationArgs(q *GeoRadiusQuery, args ...interface}) []interface} 
+</code></pre><pre><code>func newGeoLocationSliceParser(q *GeoRadiusQuery) proto.MultiBulkParse 
+</code></pre><pre><code>func newGeoLocationParser(q *GeoRadiusQuery) proto.MultiBulkParse 
+</code></pre><pre><code>func NewGeoPosCmd(args ...interface}) *GeoPosCmd 
+</code></pre><pre><code>func NewCommandsInfoCmd(args ...interface}) *CommandsInfoCmd 
+</code></pre><pre><code>func commandInfoParser(rd *proto.Reader, n int64) (interface}, error) 
+</code></pre><pre><code>func newCmdsInfoCache(fn func() (map[string]*CommandInfo, error)) *cmdsInfoCache 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Cmder'>Cmder</h4>
+type Cmder interface {
+	Name() string
+	Args() []interface{}
+	stringArg(int) string
+
+	readTimeout() *time.Duration
+	readReply(rd *proto.Reader) error
+
+	setErr(error)
+	Err() error
+}
+
+
+<h4 id='baseCmd'>baseCmd</h4>
+type baseCmd struct {
+	args []interface{}
+	err  error
+
+	_readTimeout *time.Duration
+}
+
+func (cmd *baseCmd) Name() string func (cmd *baseCmd) Args() []interfacefunc (cmd *baseCmd) stringArg(pos int) string func (cmd *baseCmd) setErr(e error) func (cmd *baseCmd) Err() error func (cmd *baseCmd) readTimeout() *time.Duration func (cmd *baseCmd) setReadTimeout(d time.Duration) 
+<h4 id='Cmd'>Cmd</h4>
+type Cmd struct {
+	baseCmd
+
+	val interface{}
+}
+
+func (cmd *Cmd) Val() interfacefunc (cmd *Cmd) Result() (interfacefunc (cmd *Cmd) String() (string, error) func (cmd *Cmd) Int() (int, error) func (cmd *Cmd) Bool() (bool, error) func (cmd *Cmd) readReply(rd *proto.Reader) error 
+<h4 id='SliceCmd'>SliceCmd</h4>
+type SliceCmd struct {
+	baseCmd
+
+	val []interface{}
+}
+
+func (cmd *SliceCmd) Val() []interfacefunc (cmd *SliceCmd) Result() ([]interfacefunc (cmd *SliceCmd) String() string func (cmd *SliceCmd) readReply(rd *proto.Reader) error 
+<h4 id='StatusCmd'>StatusCmd</h4>
+type StatusCmd struct {
+	baseCmd
+
+	val string
+}
+
+func (cmd *StatusCmd) Val() string func (cmd *StatusCmd) Result() (string, error) func (cmd *StatusCmd) String() string func (cmd *StatusCmd) readReply(rd *proto.Reader) error 
+<h4 id='IntCmd'>IntCmd</h4>
+type IntCmd struct {
+	baseCmd
+
+	val int64
+}
+
+func (cmd *IntCmd) Val() int64 func (cmd *IntCmd) Result() (int64, error) func (cmd *IntCmd) String() string func (cmd *IntCmd) readReply(rd *proto.Reader) error 
+<h4 id='IntSliceCmd'>IntSliceCmd</h4>
+type IntSliceCmd struct {
+	baseCmd
+
+	val []int64
+}
+
+func (cmd *IntSliceCmd) Val() []int64 func (cmd *IntSliceCmd) Result() ([]int64, error) func (cmd *IntSliceCmd) String() string func (cmd *IntSliceCmd) readReply(rd *proto.Reader) error 
+<h4 id='DurationCmd'>DurationCmd</h4>
+type DurationCmd struct {
+	baseCmd
+
+	val       time.Duration
+	precision time.Duration
+}
+
+func (cmd *DurationCmd) Val() time.Duration func (cmd *DurationCmd) Result() (time.Duration, error) func (cmd *DurationCmd) String() string func (cmd *DurationCmd) readReply(rd *proto.Reader) error 
+<h4 id='TimeCmd'>TimeCmd</h4>
+type TimeCmd struct {
+	baseCmd
+
+	val time.Time
+}
+
+func (cmd *TimeCmd) Val() time.Time func (cmd *TimeCmd) Result() (time.Time, error) func (cmd *TimeCmd) String() string func (cmd *TimeCmd) readReply(rd *proto.Reader) error 
+<h4 id='BoolCmd'>BoolCmd</h4>
+type BoolCmd struct {
+	baseCmd
+
+	val bool
+}
+
+func (cmd *BoolCmd) Val() bool func (cmd *BoolCmd) Result() (bool, error) func (cmd *BoolCmd) String() string func (cmd *BoolCmd) readReply(rd *proto.Reader) error 
+<h4 id='StringCmd'>StringCmd</h4>
+type StringCmd struct {
+	baseCmd
+
+	val string
+}
+
+func (cmd *StringCmd) Val() string func (cmd *StringCmd) Result() (string, error) func (cmd *StringCmd) Bytes() ([]byte, error) func (cmd *StringCmd) Int() (int, error) func (cmd *StringCmd) Time() (time.Time, error) func (cmd *StringCmd) Scan(val interfacefunc (cmd *StringCmd) String() string func (cmd *StringCmd) readReply(rd *proto.Reader) error 
+<h4 id='FloatCmd'>FloatCmd</h4>
+type FloatCmd struct {
+	baseCmd
+
+	val float64
+}
+
+func (cmd *FloatCmd) Val() float64 func (cmd *FloatCmd) Result() (float64, error) func (cmd *FloatCmd) String() string func (cmd *FloatCmd) readReply(rd *proto.Reader) error 
+<h4 id='StringSliceCmd'>StringSliceCmd</h4>
+type StringSliceCmd struct {
+	baseCmd
+
+	val []string
+}
+
+func (cmd *StringSliceCmd) Val() []string func (cmd *StringSliceCmd) Result() ([]string, error) func (cmd *StringSliceCmd) String() string func (cmd *StringSliceCmd) ScanSlice(container interfacefunc (cmd *StringSliceCmd) readReply(rd *proto.Reader) error 
+<h4 id='BoolSliceCmd'>BoolSliceCmd</h4>
+type BoolSliceCmd struct {
+	baseCmd
+
+	val []bool
+}
+
+func (cmd *BoolSliceCmd) Val() []bool func (cmd *BoolSliceCmd) Result() ([]bool, error) func (cmd *BoolSliceCmd) String() string func (cmd *BoolSliceCmd) readReply(rd *proto.Reader) error 
+<h4 id='StringStringMapCmd'>StringStringMapCmd</h4>
+type StringStringMapCmd struct {
+	baseCmd
+
+	val map[string]string
+}
+
+func (cmd *StringStringMapCmd) Val() map[string]string func (cmd *StringStringMapCmd) Result() (map[string]string, error) func (cmd *StringStringMapCmd) String() string func (cmd *StringStringMapCmd) readReply(rd *proto.Reader) error 
+<h4 id='StringIntMapCmd'>StringIntMapCmd</h4>
+type StringIntMapCmd struct {
+	baseCmd
+
+	val map[string]int64
+}
+
+func (cmd *StringIntMapCmd) Val() map[string]int64 func (cmd *StringIntMapCmd) Result() (map[string]int64, error) func (cmd *StringIntMapCmd) String() string func (cmd *StringIntMapCmd) readReply(rd *proto.Reader) error 
+<h4 id='StringStructMapCmd'>StringStructMapCmd</h4>
+type StringStructMapCmd struct {
+	baseCmd
+
+	val map[string]struct{}
+}
+
+func (cmd *StringStructMapCmd) Val() map[string]structfunc (cmd *StringStructMapCmd) Result() (map[string]structfunc (cmd *StringStructMapCmd) String() string func (cmd *StringStructMapCmd) readReply(rd *proto.Reader) error 
+<h4 id='XMessage'>XMessage</h4>
+type XMessage struct {
+	ID     string
+	Values map[string]interface{}
+}
+
+
+<h4 id='XMessageSliceCmd'>XMessageSliceCmd</h4>
+type XMessageSliceCmd struct {
+	baseCmd
+
+	val []XMessage
+}
+
+func (cmd *XMessageSliceCmd) Val() []XMessage func (cmd *XMessageSliceCmd) Result() ([]XMessage, error) func (cmd *XMessageSliceCmd) String() string func (cmd *XMessageSliceCmd) readReply(rd *proto.Reader) error 
+<h4 id='XStream'>XStream</h4>
+type XStream struct {
+	Stream   string
+	Messages []XMessage
+}
+
+
+<h4 id='XStreamSliceCmd'>XStreamSliceCmd</h4>
+type XStreamSliceCmd struct {
+	baseCmd
+
+	val []XStream
+}
+
+func (cmd *XStreamSliceCmd) Val() []XStream func (cmd *XStreamSliceCmd) Result() ([]XStream, error) func (cmd *XStreamSliceCmd) String() string func (cmd *XStreamSliceCmd) readReply(rd *proto.Reader) error 
+<h4 id='XPending'>XPending</h4>
+type XPending struct {
+	Count     int64
+	Lower     string
+	Higher    string
+	Consumers map[string]int64
+}
+
+
+<h4 id='XPendingCmd'>XPendingCmd</h4>
+type XPendingCmd struct {
+	baseCmd
+	val *XPending
+}
+
+func (cmd *XPendingCmd) Val() *XPending func (cmd *XPendingCmd) Result() (*XPending, error) func (cmd *XPendingCmd) String() string func (cmd *XPendingCmd) readReply(rd *proto.Reader) error 
+<h4 id='XPendingExt'>XPendingExt</h4>
+type XPendingExt struct {
+	ID         string
+	Consumer   string
+	Idle       time.Duration
+	RetryCount int64
+}
+
+
+<h4 id='XPendingExtCmd'>XPendingExtCmd</h4>
+type XPendingExtCmd struct {
+	baseCmd
+	val []XPendingExt
+}
+
+func (cmd *XPendingExtCmd) Val() []XPendingExt func (cmd *XPendingExtCmd) Result() ([]XPendingExt, error) func (cmd *XPendingExtCmd) String() string func (cmd *XPendingExtCmd) readReply(rd *proto.Reader) error 
+<h4 id='XInfoGroupsCmd'>XInfoGroupsCmd</h4>
+type XInfoGroupsCmd struct {
+	baseCmd
+	val []XInfoGroups
+}
+
+func (cmd *XInfoGroupsCmd) Val() []XInfoGroups func (cmd *XInfoGroupsCmd) Result() ([]XInfoGroups, error) func (cmd *XInfoGroupsCmd) String() string func (cmd *XInfoGroupsCmd) readReply(rd *proto.Reader) error 
+<h4 id='XInfoGroups'>XInfoGroups</h4>
+type XInfoGroups struct {
+	Name            string
+	Consumers       int64
+	Pending         int64
+	LastDeliveredID string
+}
+
+
+<h4 id='ZSliceCmd'>ZSliceCmd</h4>
+type ZSliceCmd struct {
+	baseCmd
+
+	val []Z
+}
+
+func (cmd *ZSliceCmd) Val() []Z func (cmd *ZSliceCmd) Result() ([]Z, error) func (cmd *ZSliceCmd) String() string func (cmd *ZSliceCmd) readReply(rd *proto.Reader) error 
+<h4 id='ZWithKeyCmd'>ZWithKeyCmd</h4>
+type ZWithKeyCmd struct {
+	baseCmd
+
+	val *ZWithKey
+}
+
+func (cmd *ZWithKeyCmd) Val() *ZWithKey func (cmd *ZWithKeyCmd) Result() (*ZWithKey, error) func (cmd *ZWithKeyCmd) String() string func (cmd *ZWithKeyCmd) readReply(rd *proto.Reader) error 
+<h4 id='ScanCmd'>ScanCmd</h4>
+type ScanCmd struct {
+	baseCmd
+
+	page   []string
+	cursor uint64
+
+	process func(cmd Cmder) error
+}
+
+func (cmd *ScanCmd) Val() (keys []string, cursor uint64) func (cmd *ScanCmd) Result() (keys []string, cursor uint64, err error) func (cmd *ScanCmd) String() string func (cmd *ScanCmd) readReply(rd *proto.Reader) error func (cmd *ScanCmd) Iterator() *ScanIterator 
+<h4 id='ClusterNode'>ClusterNode</h4>
+type ClusterNode struct {
+	ID   string
+	Addr string
+}
+
+
+<h4 id='ClusterSlot'>ClusterSlot</h4>
+type ClusterSlot struct {
+	Start int
+	End   int
+	Nodes []ClusterNode
+}
+
+
+<h4 id='ClusterSlotsCmd'>ClusterSlotsCmd</h4>
+type ClusterSlotsCmd struct {
+	baseCmd
+
+	val []ClusterSlot
+}
+
+func (cmd *ClusterSlotsCmd) Val() []ClusterSlot func (cmd *ClusterSlotsCmd) Result() ([]ClusterSlot, error) func (cmd *ClusterSlotsCmd) String() string func (cmd *ClusterSlotsCmd) readReply(rd *proto.Reader) error 
+<h4 id='GeoLocation'>GeoLocation</h4>
+// GeoLocation is used with GeoAdd to add geospatial location.
+type GeoLocation struct {
+	Name                      string
+	Longitude, Latitude, Dist float64
+	GeoHash                   int64
+}
+
+
+<h4 id='GeoRadiusQuery'>GeoRadiusQuery</h4>
+// GeoRadiusQuery is used with GeoRadius to query geospatial index.
+type GeoRadiusQuery struct {
+	Radius float64
+	// Can be m, km, ft, or mi. Default is km.
+	Unit        string
+	WithCoord   bool
+	WithDist    bool
+	WithGeoHash bool
+	Count       int
+	// Can be ASC or DESC. Default is no sort order.
+	Sort      string
+	Store     string
+	StoreDist string
+}
+
+
+<h4 id='GeoLocationCmd'>GeoLocationCmd</h4>
+type GeoLocationCmd struct {
+	baseCmd
+
+	q         *GeoRadiusQuery
+	locations []GeoLocation
+}
+
+func (cmd *GeoLocationCmd) Val() []GeoLocation func (cmd *GeoLocationCmd) Result() ([]GeoLocation, error) func (cmd *GeoLocationCmd) String() string func (cmd *GeoLocationCmd) readReply(rd *proto.Reader) error 
+<h4 id='GeoPos'>GeoPos</h4>
+type GeoPos struct {
+	Longitude, Latitude float64
+}
+
+
+<h4 id='GeoPosCmd'>GeoPosCmd</h4>
+type GeoPosCmd struct {
+	baseCmd
+
+	val []*GeoPos
+}
+
+func (cmd *GeoPosCmd) Val() []*GeoPos func (cmd *GeoPosCmd) Result() ([]*GeoPos, error) func (cmd *GeoPosCmd) String() string func (cmd *GeoPosCmd) readReply(rd *proto.Reader) error 
+<h4 id='CommandInfo'>CommandInfo</h4>
+type CommandInfo struct {
+	Name        string
+	Arity       int8
+	Flags       []string
+	FirstKeyPos int8
+	LastKeyPos  int8
+	StepCount   int8
+	ReadOnly    bool
+}
+
+
+<h4 id='CommandsInfoCmd'>CommandsInfoCmd</h4>
+type CommandsInfoCmd struct {
+	baseCmd
+
+	val map[string]*CommandInfo
+}
+
+func (cmd *CommandsInfoCmd) Val() map[string]*CommandInfo func (cmd *CommandsInfoCmd) Result() (map[string]*CommandInfo, error) func (cmd *CommandsInfoCmd) String() string func (cmd *CommandsInfoCmd) readReply(rd *proto.Reader) error 
+<h4 id='cmdsInfoCache'>cmdsInfoCache</h4>
+type cmdsInfoCache struct {
+	fn func() (map[string]*CommandInfo, error)
+
+	once internal.Once
+	cmds map[string]*CommandInfo
+}
+
+func (c *cmdsInfoCache) Get() (map[string]*CommandInfo, error) </code></pre>

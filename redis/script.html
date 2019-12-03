@@ -1,0 +1,19 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var _ scripter = (*Client)(nil)
+</code></pre><pre><code>var _ scripter = (*Ring)(nil)
+</code></pre><pre><code>var _ scripter = (*ClusterClient)(nil)
+</code></pre><h3>Functions</h3><pre><code>func NewScript(src string) *Script 
+</code></pre><h3>Classes</h3><pre><code><h4 id='scripter'>scripter</h4>
+type scripter interface {
+	Eval(script string, keys []string, args ...interface{}) *Cmd
+	EvalSha(sha1 string, keys []string, args ...interface{}) *Cmd
+	ScriptExists(hashes ...string) *BoolSliceCmd
+	ScriptLoad(script string) *StringCmd
+}
+
+
+<h4 id='Script'>Script</h4>
+type Script struct {
+	src, hash string
+}
+
+func (s *Script) Hash() string func (s *Script) Load(c scripter) *StringCmd func (s *Script) Exists(c scripter) *BoolSliceCmd func (s *Script) Eval(c scripter, keys []string, args ...interfacefunc (s *Script) EvalSha(c scripter, keys []string, args ...interfacefunc (s *Script) Run(c scripter, keys []string, args ...interface</code></pre>

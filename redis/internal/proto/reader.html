@@ -1,0 +1,26 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><pre><code>const (
+	ErrorReply  = '-'
+	StatusReply = '+'
+	IntReply    = ':'
+	StringReply = '$'
+	ArrayReply  = '*'
+)
+</code></pre><h3>Variables</h3><h3>Functions</h3><pre><code>func NewReader(rd io.Reader) *Reader 
+</code></pre><pre><code>func isNilReply(b []byte) bool 
+</code></pre><pre><code>func ParseErrorReply(line []byte) error 
+</code></pre><pre><code>func parseArrayLen(line []byte) (int64, error) 
+</code></pre><h3>Classes</h3><pre><code><h4 id='RedisError'>RedisError</h4>
+type RedisError string
+
+func (e RedisError) Error() string 
+<h4 id='MultiBulkParse'>MultiBulkParse</h4>
+type MultiBulkParse func(*Reader, int64) (interface{}, error)
+
+
+<h4 id='Reader'>Reader</h4>
+type Reader struct {
+	rd   *bufio.Reader
+	_buf []byte
+}
+
+func (r *Reader) Buffered() int func (r *Reader) Peek(n int) ([]byte, error) func (r *Reader) Reset(rd io.Reader) func (r *Reader) ReadLine() ([]byte, error) func (r *Reader) readLine() ([]byte, error) func (r *Reader) ReadReply(m MultiBulkParse) (interfacefunc (r *Reader) ReadIntReply() (int64, error) func (r *Reader) ReadString() (string, error) func (r *Reader) readStringReply(line []byte) (string, error) func (r *Reader) ReadArrayReply(m MultiBulkParse) (interfacefunc (r *Reader) ReadArrayLen() (int64, error) func (r *Reader) ReadScanReply() ([]string, uint64, error) func (r *Reader) ReadInt() (int64, error) func (r *Reader) ReadUint() (uint64, error) func (r *Reader) ReadFloatReply() (float64, error) func (r *Reader) readTmpBytesReply() ([]byte, error) func (r *Reader) _readTmpBytesReply(line []byte) ([]byte, error) func (r *Reader) buf(n int) []byte </code></pre>

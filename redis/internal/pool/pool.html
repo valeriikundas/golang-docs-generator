@@ -1,0 +1,73 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var ErrClosed = errors.New("redis: client is closed")
+</code></pre><pre><code>var ErrPoolTimeout = errors.New("redis: connection pool timeout")
+</code></pre><pre><code>var timers = sync.Pool{
+</code></pre><pre><code>var _ Pooler = (*ConnPool)(nil)
+</code></pre><h3>Functions</h3><pre><code>func NewConnPool(opt *Options) *ConnPool 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Stats'>Stats</h4>
+// Stats contains pool state information and accumulated stats.
+type Stats struct {
+	Hits     uint32 // number of times free connection was found in the pool
+	Misses   uint32 // number of times free connection was NOT found in the pool
+	Timeouts uint32 // number of times a wait timeout occurred
+
+	TotalConns uint32 // number of total connections in the pool
+	IdleConns  uint32 // number of idle connections in the pool
+	StaleConns uint32 // number of stale connections removed from the pool
+}
+
+
+<h4 id='Pooler'>Pooler</h4>
+type Pooler interface {
+	NewConn(context.Context) (*Conn, error)
+	CloseConn(*Conn) error
+
+	Get(context.Context) (*Conn, error)
+	Put(*Conn)
+	Remove(*Conn, error)
+
+	Len() int
+	IdleLen() int
+	Stats() *Stats
+
+	Close() error
+}
+
+
+<h4 id='Options'>Options</h4>
+type Options struct {
+	Dialer  func(context.Context) (net.Conn, error)
+	OnClose func(*Conn) error
+
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
+}
+
+
+<h4 id='ConnPool'>ConnPool</h4>
+type ConnPool struct {
+	opt *Options
+
+	dialErrorsNum uint32 // atomic
+
+	lastDialErrorMu sync.RWMutex
+	lastDialError   error
+
+	queue chan struct{}
+
+	connsMu      sync.Mutex
+	conns        []*Conn
+	idleConns    []*Conn
+	poolSize     int
+	idleConnsLen int
+
+	stats Stats
+
+	_closed  uint32 // atomic
+	closedCh chan struct{}
+}
+
+func (p *ConnPool) checkMinIdleConns() func (p *ConnPool) addIdleConn() error func (p *ConnPool) NewConn(ctx context.Context) (*Conn, error) func (p *ConnPool) newConn(ctx context.Context, pooled bool) (*Conn, error) func (p *ConnPool) dialConn(ctx context.Context, pooled bool) (*Conn, error) func (p *ConnPool) tryDial() func (p *ConnPool) setLastDialError(err error) func (p *ConnPool) getLastDialError() error func (p *ConnPool) Get(ctx context.Context) (*Conn, error) func (p *ConnPool) getTurn() func (p *ConnPool) waitTurn(ctx context.Context) error func (p *ConnPool) freeTurn() func (p *ConnPool) popIdle() *Conn func (p *ConnPool) Put(cn *Conn) func (p *ConnPool) Remove(cn *Conn, reason error) func (p *ConnPool) CloseConn(cn *Conn) error func (p *ConnPool) removeConnWithLock(cn *Conn) func (p *ConnPool) removeConn(cn *Conn) func (p *ConnPool) closeConn(cn *Conn) error func (p *ConnPool) Len() int func (p *ConnPool) IdleLen() int func (p *ConnPool) Stats() *Stats func (p *ConnPool) closed() bool func (p *ConnPool) Filter(fn func(*Conn) bool) error func (p *ConnPool) Close() error func (p *ConnPool) reaper(frequency time.Duration) func (p *ConnPool) ReapStaleConns() (int, error) func (p *ConnPool) reapStaleConn() *Conn func (p *ConnPool) isStaleConn(cn *Conn) bool </code></pre>

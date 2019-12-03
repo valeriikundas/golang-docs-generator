@@ -1,0 +1,10 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><h3>Functions</h3><pre><code>func NewWriter(wr io.Writer) *Writer 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Writer'>Writer</h4>
+type Writer struct {
+	wr *bufio.Writer
+
+	lenBuf []byte
+	numBuf []byte
+}
+
+func (w *Writer) WriteArgs(args []interfacefunc (w *Writer) writeLen(n int) error func (w *Writer) writeArg(v interfacefunc (w *Writer) bytes(b []byte) error func (w *Writer) string(s string) error func (w *Writer) uint(n uint64) error func (w *Writer) int(n int64) error func (w *Writer) float(f float64) error func (w *Writer) crlf() error func (w *Writer) Buffered() int func (w *Writer) Reset(wr io.Writer) func (w *Writer) Flush() error </code></pre>

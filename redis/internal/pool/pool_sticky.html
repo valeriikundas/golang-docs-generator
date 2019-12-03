@@ -1,0 +1,13 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var _ Pooler = (*StickyConnPool)(nil)
+</code></pre><h3>Functions</h3><pre><code>func NewStickyConnPool(pool *ConnPool, reusable bool) *StickyConnPool 
+</code></pre><h3>Classes</h3><pre><code><h4 id='StickyConnPool'>StickyConnPool</h4>
+type StickyConnPool struct {
+	pool     *ConnPool
+	reusable bool
+
+	cn     *Conn
+	closed bool
+	mu     sync.Mutex
+}
+
+func (p *StickyConnPool) NewConn(context.Context) (*Conn, error) func (p *StickyConnPool) CloseConn(*Conn) error func (p *StickyConnPool) Get(ctx context.Context) (*Conn, error) func (p *StickyConnPool) putUpstream() func (p *StickyConnPool) Put(cn *Conn) func (p *StickyConnPool) removeUpstream(reason error) func (p *StickyConnPool) Remove(cn *Conn, reason error) func (p *StickyConnPool) Len() int func (p *StickyConnPool) IdleLen() int func (p *StickyConnPool) Stats() *Stats func (p *StickyConnPool) Close() error </code></pre>

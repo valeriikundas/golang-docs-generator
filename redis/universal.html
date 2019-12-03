@@ -1,0 +1,74 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var _ UniversalClient = (*Client)(nil)
+</code></pre><pre><code>var _ UniversalClient = (*ClusterClient)(nil)
+</code></pre><pre><code>var _ UniversalClient = (*Ring)(nil)
+</code></pre><h3>Functions</h3><pre><code>// NewUniversalClient returns a new multi client. The type of client returned depends
+// on the following three conditions:
+//
+// 1. if a MasterName is passed a sentinel-backed FailoverClient will be returned
+// 2. if the number of Addrs is two or more, a ClusterClient will be returned
+// 3. otherwise, a single-node redis Client will be returned.
+func NewUniversalClient(opts *UniversalOptions) UniversalClient 
+</code></pre><h3>Classes</h3><pre><code><h4 id='UniversalOptions'>UniversalOptions</h4>
+// UniversalOptions information is required by UniversalClient to establish
+// connections.
+type UniversalOptions struct {
+	// Either a single address or a seed list of host:port addresses
+	// of cluster/sentinel nodes.
+	Addrs []string
+
+	// Database to be selected after connecting to the server.
+	// Only single-node and failover clients.
+	DB int
+
+	// Common options.
+
+	Dialer             func(ctx context.Context, network, addr string) (net.Conn, error)
+	OnConnect          func(*Conn) error
+	Password           string
+	MaxRetries         int
+	MinRetryBackoff    time.Duration
+	MaxRetryBackoff    time.Duration
+	DialTimeout        time.Duration
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
+	TLSConfig          *tls.Config
+
+	// Only cluster clients.
+
+	MaxRedirects   int
+	ReadOnly       bool
+	RouteByLatency bool
+	RouteRandomly  bool
+
+	// The sentinel master name.
+	// Only failover clients.
+	MasterName string
+}
+
+func (o *UniversalOptions) cluster() *ClusterOptions func (o *UniversalOptions) failover() *FailoverOptions func (o *UniversalOptions) simple() *Options 
+<h4 id='UniversalClient'>UniversalClient</h4>
+// UniversalClient is an abstract client which - based on the provided options -
+// can connect to either clusters, or sentinel-backed failover instances
+// or simple single-instance servers. This can be useful for testing
+// cluster-specific applications locally.
+type UniversalClient interface {
+	Cmdable
+	Context() context.Context
+	AddHook(Hook)
+	Watch(fn func(*Tx) error, keys ...string) error
+	Do(args ...interface{}) *Cmd
+	DoContext(ctx context.Context, args ...interface{}) *Cmd
+	Process(cmd Cmder) error
+	ProcessContext(ctx context.Context, cmd Cmder) error
+	Subscribe(channels ...string) *PubSub
+	PSubscribe(channels ...string) *PubSub
+	Close() error
+}
+
+</code></pre>

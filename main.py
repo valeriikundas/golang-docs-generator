@@ -23,8 +23,6 @@ def entrypoint(path, output):
     global original_docs_path
     original_docs_path = os.path.abspath(output)
 
-    if os.path.exists(original_docs_path):
-        shutil.rmtree(original_docs_path)
     os.makedirs(original_docs_path)
 
     source_code_structure = build_file_structure(original_code_path)

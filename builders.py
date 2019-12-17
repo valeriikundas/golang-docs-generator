@@ -18,16 +18,22 @@ def build_file_structure(path):
     return file_structure
 
 
-def build_doc_files(source_code_structure_or_filename, names_dict, doc_path):
+def build_doc_files(
+    source_code_structure_or_filename,
+    names_dict,
+    doc_path,
+    original_docs_path,
+    original_code_path,
+):
     if not os.path.exists(doc_path) and not doc_path.endswith(".go"):
         os.makedirs(doc_path, exist_ok=True)
 
     if isinstance(source_code_structure_or_filename, str):
         filepath = source_code_structure_or_filename
-        doc_filepath = os.path.join("docs", filepath).replace(".go", ".html")
+        doc_filepath = os.path.join(doc_path, filepath).replace(".go", ".html")
         code = open(filepath, "r").readlines()
 
-        documentation = Parser(code)
+        documentation = Parser(code, original_docs_path, original_code_path)
         documentation.process()
         documentation.write(doc_filepath)
 
@@ -36,4 +42,10 @@ def build_doc_files(source_code_structure_or_filename, names_dict, doc_path):
         return
 
     for dirname, nested in list(source_code_structure_or_filename.items()):
-        build_doc_files(nested, names_dict, os.path.join(doc_path, dirname))
+        build_doc_files(
+            nested,
+            names_dict,
+            os.path.join(doc_path, dirname),
+            original_docs_path,
+            original_code_path,
+        )

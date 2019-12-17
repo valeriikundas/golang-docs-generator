@@ -5,6 +5,7 @@ from utils import (
     get_lines_below_that_start_with_sign,
     mark_code,
 )
+from writers import generate_menu
 
 URL_PATTERN = r"https?://[a-z.]+\/[a-z/]+"
 CONSTANT_SINGLE_PATTERN = r"const .+=.+"
@@ -18,9 +19,12 @@ TYPE_PATTERN = r"type .+"
 
 
 class Parser:
-    def __init__(self, source_code):
+    def __init__(self, source_code, original_docs_path, original_code_path):
+        self.original_docs_path = original_docs_path
+        self.original_code_path = original_code_path
         self.source_code = source_code
         self.file_documentation = ""
+        self.imports_documentation = ""
         self.constants_documentation = list()
         self.variable_documentation = list()
         self.classes_documentation = list()
@@ -31,14 +35,32 @@ class Parser:
     def process(self):
         self.process_file_documentation()
         self.process_urls_in_file_description()
+        self.process_imports()
 
         for i, line in enumerate(self.source_code):
+
             self.process_multiple_constants(line, i)
             self.process_variable_single(line, i)
             self.process_variables_multiple(line, i)
             self.process_functions(line, i)
             self.process_types(line, i)
             self.process_class_methods(line, i)
+
+    def process_imports(self,):
+        imports = ""
+        for i, val in enumerate(self.source_code):
+            if val.startswith("import"):
+                imports += val
+                i += 1
+                if val.find("(") != -1:
+                    while i < len(self.source_code):
+                        imports += self.source_code[i]
+
+                        if self.source_code[i].find(")") != -1:
+                            break
+                        i += 1
+
+        self.imports_documentation += imports
 
     def process_file_documentation(self):
         for line in self.source_code:
@@ -95,9 +117,13 @@ class Parser:
     def process_functions(self, line, index):
         match = re.match(FUNCTION_PATTERN, line)
         if match:
-            doc = get_lines_above_that_start_with_comment_sign(
-                self.source_code, index
-            ) + self.source_code[index].replace("{", "")
+            doc = get_lines_above_that_start_with_comment_sign(self.source_code, index)
+            if (
+                get_lines_above_that_start_with_comment_sign(self.source_code, index)
+                == ""
+            ):
+                doc = "//<span style='background-color:yellow'>EMPTY FUNCTION DOCUMENTATION</span>\n"
+            doc += self.source_code[index].replace("{", "")
             self.functions_documentation.append(mark_code(doc))
 
     def process_types(self, line, index):
@@ -144,7 +170,10 @@ class Parser:
 
     def write(self, doc_filepath):
         with open(doc_filepath, "w") as doc_file:
-            doc_file.write(f'<a href="content.html">back</a><br>')
+            doc_file.write(
+                generate_menu(self.original_docs_path, self.original_code_path)
+            )
+            doc_file.write(f"<pre><code>{self.imports_documentation}</code></pre>")
             doc_file.write(f"<pre><code>{self.file_documentation}</code></pre>")
             doc_file.write("<h3>Constants</h3>")
             doc_file.write("".join(self.constants_documentation))

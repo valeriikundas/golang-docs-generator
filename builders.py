@@ -30,7 +30,8 @@ def build_doc_files(
 
     if isinstance(source_code_structure_or_filename, str):
         filepath = source_code_structure_or_filename
-        doc_filepath = os.path.join(doc_path, filepath).replace(".go", ".html")
+        # doc_filepath = os.path.join(doc_path, filepath).replace(".go", ".html")
+        doc_filepath = doc_path.replace(".go", ".html")
         code = open(filepath, "r").readlines()
 
         documentation = Parser(code, original_docs_path, original_code_path)

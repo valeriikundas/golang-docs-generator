@@ -1,5 +1,3 @@
-# alphabetic letters
-
 import os
 import shutil
 
@@ -41,7 +39,11 @@ def entrypoint(path, output):
     )
 
     generate_content_files(
-        "", source_code_structure, original_docs_path, path, names_dict
+        f"{path}",
+        source_code_structure,
+        original_docs_path,
+        original_code_path,  # path it was
+        names_dict,
     )
     generate_alphabetic_file(
         original_docs_path, names_dict, original_code_path, original_docs_path

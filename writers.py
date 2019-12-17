@@ -4,11 +4,26 @@ import string
 
 
 def generate_menu(original_docs_path, original_code_path):
+    code_dirname = original_code_path.split("/")[-1]
+
     index_url = f"{original_docs_path}/index.html"
-    content_url = f"{original_code_path}/content.html"
+    content_url = f"{original_docs_path}/{code_dirname}/content.html"
     indexed_url = f"{original_docs_path}/indexed.html"
 
     return f"""
+            <!doctype html>
+                <html lang="en">
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+                    <!-- Bootstrap CSS -->
+                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+                </head>
+                <body>
+
+
                 <div>
                     <a href="{index_url}">index</a>
                     <a href="{indexed_url}">alphabetic</a>
@@ -32,10 +47,10 @@ def generate_index_file(original_docs_path, original_code_path):
 <h1>{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</h1>
 <h1>version 1.0.0</h1>
 <h1>{os.path.basename((os.getcwd()))}</h1>
-<div><a href="{os.path.join(original_docs_path,original_code_path,"content.html")}">content</a></div>
-<div><a href="{os.path.join(original_docs_path,"indexed.html")}">alphabetic</a></div>
-"""
+ """
         )
+        # <div><a href="{os.path.join(original_docs_path,original_code_path.split('/'),"content.html")}">content</a></div>
+        # <div><a href="{os.path.join(original_docs_path,"indexed.html")}">alphabetic</a></div>
 
 
 def generate_alphabetic_file(
@@ -64,9 +79,7 @@ def generate_alphabetic_file(
                 break
 
             content += (
-                "<pre>"
-                + "<br>".join([f"<a href='{s[1].replace('/docs/','/')}'>{s[0]}</a>"])
-                + "</pre>"
+                "<pre>" + "<br>".join([f"<a href='{s[1]}'>{s[0]}</a>"]) + "</pre>"
             )
             i += 1
 
@@ -97,10 +110,8 @@ def generate_content_files(
             )
 
     os.makedirs(
-        os.path.join(os.getcwd(), original_docs_path, original_code_path, curpath),
-        exist_ok=True,
+        os.path.join(original_docs_path, curpath), exist_ok=True,
     )
-    with open(
-        os.path.join(os.getcwd(), original_code_path, curpath, "content.html"), "w"
-    ) as file:
+    with open(os.path.join(original_docs_path, curpath, "content.html"), "w",) as file:
         file.write(content)
+

@@ -1,0 +1,375 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var _ Cmdable = (*Client)(nil)
+</code></pre><pre><code>var _ Cmdable = (*Tx)(nil)
+</code></pre><pre><code>var _ Cmdable = (*Ring)(nil)
+</code></pre><pre><code>var _ Cmdable = (*ClusterClient)(nil)
+</code></pre><h3>Functions</h3><pre><code>func usePrecise(dur time.Duration) bool 
+</code></pre><pre><code>func formatMs(dur time.Duration) int64 
+</code></pre><pre><code>func formatSec(dur time.Duration) int64 
+</code></pre><pre><code>func appendArgs(dst, src []interface}) []interface} 
+</code></pre><pre><code>func xClaimArgs(a *XClaimArgs) []interface} 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Cmdable'>Cmdable</h4>
+type Cmdable interface {
+	Pipeline() Pipeliner
+	Pipelined(fn func(Pipeliner) error) ([]Cmder, error)
+
+	TxPipelined(fn func(Pipeliner) error) ([]Cmder, error)
+	TxPipeline() Pipeliner
+
+	Command() *CommandsInfoCmd
+	ClientGetName() *StringCmd
+	Echo(message interface{}) *StringCmd
+	Ping() *StatusCmd
+	Quit() *StatusCmd
+	Del(keys ...string) *IntCmd
+	Unlink(keys ...string) *IntCmd
+	Dump(key string) *StringCmd
+	Exists(keys ...string) *IntCmd
+	Expire(key string, expiration time.Duration) *BoolCmd
+	ExpireAt(key string, tm time.Time) *BoolCmd
+	Keys(pattern string) *StringSliceCmd
+	Migrate(host, port, key string, db int, timeout time.Duration) *StatusCmd
+	Move(key string, db int) *BoolCmd
+	ObjectRefCount(key string) *IntCmd
+	ObjectEncoding(key string) *StringCmd
+	ObjectIdleTime(key string) *DurationCmd
+	Persist(key string) *BoolCmd
+	PExpire(key string, expiration time.Duration) *BoolCmd
+	PExpireAt(key string, tm time.Time) *BoolCmd
+	PTTL(key string) *DurationCmd
+	RandomKey() *StringCmd
+	Rename(key, newkey string) *StatusCmd
+	RenameNX(key, newkey string) *BoolCmd
+	Restore(key string, ttl time.Duration, value string) *StatusCmd
+	RestoreReplace(key string, ttl time.Duration, value string) *StatusCmd
+	Sort(key string, sort *Sort) *StringSliceCmd
+	SortStore(key, store string, sort *Sort) *IntCmd
+	SortInterfaces(key string, sort *Sort) *SliceCmd
+	Touch(keys ...string) *IntCmd
+	TTL(key string) *DurationCmd
+	Type(key string) *StatusCmd
+	Scan(cursor uint64, match string, count int64) *ScanCmd
+	SScan(key string, cursor uint64, match string, count int64) *ScanCmd
+	HScan(key string, cursor uint64, match string, count int64) *ScanCmd
+	ZScan(key string, cursor uint64, match string, count int64) *ScanCmd
+	Append(key, value string) *IntCmd
+	BitCount(key string, bitCount *BitCount) *IntCmd
+	BitOpAnd(destKey string, keys ...string) *IntCmd
+	BitOpOr(destKey string, keys ...string) *IntCmd
+	BitOpXor(destKey string, keys ...string) *IntCmd
+	BitOpNot(destKey string, key string) *IntCmd
+	BitPos(key string, bit int64, pos ...int64) *IntCmd
+	BitField(key string, args ...interface{}) *IntSliceCmd
+	Decr(key string) *IntCmd
+	DecrBy(key string, decrement int64) *IntCmd
+	Get(key string) *StringCmd
+	GetBit(key string, offset int64) *IntCmd
+	GetRange(key string, start, end int64) *StringCmd
+	GetSet(key string, value interface{}) *StringCmd
+	Incr(key string) *IntCmd
+	IncrBy(key string, value int64) *IntCmd
+	IncrByFloat(key string, value float64) *FloatCmd
+	MGet(keys ...string) *SliceCmd
+	MSet(pairs ...interface{}) *StatusCmd
+	MSetNX(pairs ...interface{}) *BoolCmd
+	Set(key string, value interface{}, expiration time.Duration) *StatusCmd
+	SetBit(key string, offset int64, value int) *IntCmd
+	SetNX(key string, value interface{}, expiration time.Duration) *BoolCmd
+	SetXX(key string, value interface{}, expiration time.Duration) *BoolCmd
+	SetRange(key string, offset int64, value string) *IntCmd
+	StrLen(key string) *IntCmd
+	HDel(key string, fields ...string) *IntCmd
+	HExists(key, field string) *BoolCmd
+	HGet(key, field string) *StringCmd
+	HGetAll(key string) *StringStringMapCmd
+	HIncrBy(key, field string, incr int64) *IntCmd
+	HIncrByFloat(key, field string, incr float64) *FloatCmd
+	HKeys(key string) *StringSliceCmd
+	HLen(key string) *IntCmd
+	HMGet(key string, fields ...string) *SliceCmd
+	HMSet(key string, fields map[string]interface{}) *StatusCmd
+	HSet(key, field string, value interface{}) *BoolCmd
+	HSetNX(key, field string, value interface{}) *BoolCmd
+	HVals(key string) *StringSliceCmd
+	BLPop(timeout time.Duration, keys ...string) *StringSliceCmd
+	BRPop(timeout time.Duration, keys ...string) *StringSliceCmd
+	BRPopLPush(source, destination string, timeout time.Duration) *StringCmd
+	LIndex(key string, index int64) *StringCmd
+	LInsert(key, op string, pivot, value interface{}) *IntCmd
+	LInsertBefore(key string, pivot, value interface{}) *IntCmd
+	LInsertAfter(key string, pivot, value interface{}) *IntCmd
+	LLen(key string) *IntCmd
+	LPop(key string) *StringCmd
+	LPush(key string, values ...interface{}) *IntCmd
+	LPushX(key string, values ...interface{}) *IntCmd
+	LRange(key string, start, stop int64) *StringSliceCmd
+	LRem(key string, count int64, value interface{}) *IntCmd
+	LSet(key string, index int64, value interface{}) *StatusCmd
+	LTrim(key string, start, stop int64) *StatusCmd
+	RPop(key string) *StringCmd
+	RPopLPush(source, destination string) *StringCmd
+	RPush(key string, values ...interface{}) *IntCmd
+	RPushX(key string, values ...interface{}) *IntCmd
+	SAdd(key string, members ...interface{}) *IntCmd
+	SCard(key string) *IntCmd
+	SDiff(keys ...string) *StringSliceCmd
+	SDiffStore(destination string, keys ...string) *IntCmd
+	SInter(keys ...string) *StringSliceCmd
+	SInterStore(destination string, keys ...string) *IntCmd
+	SIsMember(key string, member interface{}) *BoolCmd
+	SMembers(key string) *StringSliceCmd
+	SMembersMap(key string) *StringStructMapCmd
+	SMove(source, destination string, member interface{}) *BoolCmd
+	SPop(key string) *StringCmd
+	SPopN(key string, count int64) *StringSliceCmd
+	SRandMember(key string) *StringCmd
+	SRandMemberN(key string, count int64) *StringSliceCmd
+	SRem(key string, members ...interface{}) *IntCmd
+	SUnion(keys ...string) *StringSliceCmd
+	SUnionStore(destination string, keys ...string) *IntCmd
+	XAdd(a *XAddArgs) *StringCmd
+	XDel(stream string, ids ...string) *IntCmd
+	XLen(stream string) *IntCmd
+	XRange(stream, start, stop string) *XMessageSliceCmd
+	XRangeN(stream, start, stop string, count int64) *XMessageSliceCmd
+	XRevRange(stream string, start, stop string) *XMessageSliceCmd
+	XRevRangeN(stream string, start, stop string, count int64) *XMessageSliceCmd
+	XRead(a *XReadArgs) *XStreamSliceCmd
+	XReadStreams(streams ...string) *XStreamSliceCmd
+	XGroupCreate(stream, group, start string) *StatusCmd
+	XGroupCreateMkStream(stream, group, start string) *StatusCmd
+	XGroupSetID(stream, group, start string) *StatusCmd
+	XGroupDestroy(stream, group string) *IntCmd
+	XGroupDelConsumer(stream, group, consumer string) *IntCmd
+	XReadGroup(a *XReadGroupArgs) *XStreamSliceCmd
+	XAck(stream, group string, ids ...string) *IntCmd
+	XPending(stream, group string) *XPendingCmd
+	XPendingExt(a *XPendingExtArgs) *XPendingExtCmd
+	XClaim(a *XClaimArgs) *XMessageSliceCmd
+	XClaimJustID(a *XClaimArgs) *StringSliceCmd
+	XTrim(key string, maxLen int64) *IntCmd
+	XTrimApprox(key string, maxLen int64) *IntCmd
+	XInfoGroups(key string) *XInfoGroupsCmd
+	BZPopMax(timeout time.Duration, keys ...string) *ZWithKeyCmd
+	BZPopMin(timeout time.Duration, keys ...string) *ZWithKeyCmd
+	ZAdd(key string, members ...*Z) *IntCmd
+	ZAddNX(key string, members ...*Z) *IntCmd
+	ZAddXX(key string, members ...*Z) *IntCmd
+	ZAddCh(key string, members ...*Z) *IntCmd
+	ZAddNXCh(key string, members ...*Z) *IntCmd
+	ZAddXXCh(key string, members ...*Z) *IntCmd
+	ZIncr(key string, member *Z) *FloatCmd
+	ZIncrNX(key string, member *Z) *FloatCmd
+	ZIncrXX(key string, member *Z) *FloatCmd
+	ZCard(key string) *IntCmd
+	ZCount(key, min, max string) *IntCmd
+	ZLexCount(key, min, max string) *IntCmd
+	ZIncrBy(key string, increment float64, member string) *FloatCmd
+	ZInterStore(destination string, store *ZStore) *IntCmd
+	ZPopMax(key string, count ...int64) *ZSliceCmd
+	ZPopMin(key string, count ...int64) *ZSliceCmd
+	ZRange(key string, start, stop int64) *StringSliceCmd
+	ZRangeWithScores(key string, start, stop int64) *ZSliceCmd
+	ZRangeByScore(key string, opt *ZRangeBy) *StringSliceCmd
+	ZRangeByLex(key string, opt *ZRangeBy) *StringSliceCmd
+	ZRangeByScoreWithScores(key string, opt *ZRangeBy) *ZSliceCmd
+	ZRank(key, member string) *IntCmd
+	ZRem(key string, members ...interface{}) *IntCmd
+	ZRemRangeByRank(key string, start, stop int64) *IntCmd
+	ZRemRangeByScore(key, min, max string) *IntCmd
+	ZRemRangeByLex(key, min, max string) *IntCmd
+	ZRevRange(key string, start, stop int64) *StringSliceCmd
+	ZRevRangeWithScores(key string, start, stop int64) *ZSliceCmd
+	ZRevRangeByScore(key string, opt *ZRangeBy) *StringSliceCmd
+	ZRevRangeByLex(key string, opt *ZRangeBy) *StringSliceCmd
+	ZRevRangeByScoreWithScores(key string, opt *ZRangeBy) *ZSliceCmd
+	ZRevRank(key, member string) *IntCmd
+	ZScore(key, member string) *FloatCmd
+	ZUnionStore(dest string, store *ZStore) *IntCmd
+	PFAdd(key string, els ...interface{}) *IntCmd
+	PFCount(keys ...string) *IntCmd
+	PFMerge(dest string, keys ...string) *StatusCmd
+	BgRewriteAOF() *StatusCmd
+	BgSave() *StatusCmd
+	ClientKill(ipPort string) *StatusCmd
+	ClientKillByFilter(keys ...string) *IntCmd
+	ClientList() *StringCmd
+	ClientPause(dur time.Duration) *BoolCmd
+	ClientID() *IntCmd
+	ConfigGet(parameter string) *SliceCmd
+	ConfigResetStat() *StatusCmd
+	ConfigSet(parameter, value string) *StatusCmd
+	ConfigRewrite() *StatusCmd
+	DBSize() *IntCmd
+	FlushAll() *StatusCmd
+	FlushAllAsync() *StatusCmd
+	FlushDB() *StatusCmd
+	FlushDBAsync() *StatusCmd
+	Info(section ...string) *StringCmd
+	LastSave() *IntCmd
+	Save() *StatusCmd
+	Shutdown() *StatusCmd
+	ShutdownSave() *StatusCmd
+	ShutdownNoSave() *StatusCmd
+	SlaveOf(host, port string) *StatusCmd
+	Time() *TimeCmd
+	Eval(script string, keys []string, args ...interface{}) *Cmd
+	EvalSha(sha1 string, keys []string, args ...interface{}) *Cmd
+	ScriptExists(hashes ...string) *BoolSliceCmd
+	ScriptFlush() *StatusCmd
+	ScriptKill() *StatusCmd
+	ScriptLoad(script string) *StringCmd
+	DebugObject(key string) *StringCmd
+	Publish(channel string, message interface{}) *IntCmd
+	PubSubChannels(pattern string) *StringSliceCmd
+	PubSubNumSub(channels ...string) *StringIntMapCmd
+	PubSubNumPat() *IntCmd
+	ClusterSlots() *ClusterSlotsCmd
+	ClusterNodes() *StringCmd
+	ClusterMeet(host, port string) *StatusCmd
+	ClusterForget(nodeID string) *StatusCmd
+	ClusterReplicate(nodeID string) *StatusCmd
+	ClusterResetSoft() *StatusCmd
+	ClusterResetHard() *StatusCmd
+	ClusterInfo() *StringCmd
+	ClusterKeySlot(key string) *IntCmd
+	ClusterGetKeysInSlot(slot int, count int) *StringSliceCmd
+	ClusterCountFailureReports(nodeID string) *IntCmd
+	ClusterCountKeysInSlot(slot int) *IntCmd
+	ClusterDelSlots(slots ...int) *StatusCmd
+	ClusterDelSlotsRange(min, max int) *StatusCmd
+	ClusterSaveConfig() *StatusCmd
+	ClusterSlaves(nodeID string) *StringSliceCmd
+	ClusterFailover() *StatusCmd
+	ClusterAddSlots(slots ...int) *StatusCmd
+	ClusterAddSlotsRange(min, max int) *StatusCmd
+	GeoAdd(key string, geoLocation ...*GeoLocation) *IntCmd
+	GeoPos(key string, members ...string) *GeoPosCmd
+	GeoRadius(key string, longitude, latitude float64, query *GeoRadiusQuery) *GeoLocationCmd
+	GeoRadiusStore(key string, longitude, latitude float64, query *GeoRadiusQuery) *IntCmd
+	GeoRadiusByMember(key, member string, query *GeoRadiusQuery) *GeoLocationCmd
+	GeoRadiusByMemberStore(key, member string, query *GeoRadiusQuery) *IntCmd
+	GeoDist(key string, member1, member2, unit string) *FloatCmd
+	GeoHash(key string, members ...string) *StringSliceCmd
+	ReadOnly() *StatusCmd
+	ReadWrite() *StatusCmd
+	MemoryUsage(key string, samples ...int) *IntCmd
+}
+
+
+<h4 id='StatefulCmdable'>StatefulCmdable</h4>
+type StatefulCmdable interface {
+	Cmdable
+	Auth(password string) *StatusCmd
+	Select(index int) *StatusCmd
+	SwapDB(index1, index2 int) *StatusCmd
+	ClientSetName(name string) *BoolCmd
+}
+
+
+<h4 id='cmdable'>cmdable</h4>
+type cmdable func(cmd Cmder) error
+
+func (c cmdable) Echo(message interfacefunc (c cmdable) Ping() *StatusCmd func (c cmdable) Wait(numSlaves int, timeout time.Duration) *IntCmd func (c cmdable) Quit() *StatusCmd func (c cmdable) Command() *CommandsInfoCmd func (c cmdable) Del(keys ...string) *IntCmd func (c cmdable) Unlink(keys ...string) *IntCmd func (c cmdable) Dump(key string) *StringCmd func (c cmdable) Exists(keys ...string) *IntCmd func (c cmdable) Expire(key string, expiration time.Duration) *BoolCmd func (c cmdable) ExpireAt(key string, tm time.Time) *BoolCmd func (c cmdable) Keys(pattern string) *StringSliceCmd func (c cmdable) Migrate(host, port, key string, db int, timeout time.Duration) *StatusCmd func (c cmdable) Move(key string, db int) *BoolCmd func (c cmdable) ObjectRefCount(key string) *IntCmd func (c cmdable) ObjectEncoding(key string) *StringCmd func (c cmdable) ObjectIdleTime(key string) *DurationCmd func (c cmdable) Persist(key string) *BoolCmd func (c cmdable) PExpire(key string, expiration time.Duration) *BoolCmd func (c cmdable) PExpireAt(key string, tm time.Time) *BoolCmd func (c cmdable) PTTL(key string) *DurationCmd func (c cmdable) RandomKey() *StringCmd func (c cmdable) Rename(key, newkey string) *StatusCmd func (c cmdable) RenameNX(key, newkey string) *BoolCmd func (c cmdable) Restore(key string, ttl time.Duration, value string) *StatusCmd func (c cmdable) RestoreReplace(key string, ttl time.Duration, value string) *StatusCmd func (c cmdable) Sort(key string, sort *Sort) *StringSliceCmd func (c cmdable) SortStore(key, store string, sort *Sort) *IntCmd func (c cmdable) SortInterfaces(key string, sort *Sort) *SliceCmd func (c cmdable) Touch(keys ...string) *IntCmd func (c cmdable) TTL(key string) *DurationCmd func (c cmdable) Type(key string) *StatusCmd func (c cmdable) Scan(cursor uint64, match string, count int64) *ScanCmd func (c cmdable) SScan(key string, cursor uint64, match string, count int64) *ScanCmd func (c cmdable) HScan(key string, cursor uint64, match string, count int64) *ScanCmd func (c cmdable) ZScan(key string, cursor uint64, match string, count int64) *ScanCmd func (c cmdable) Append(key, value string) *IntCmd func (c cmdable) BitCount(key string, bitCount *BitCount) *IntCmd func (c cmdable) bitOp(op, destKey string, keys ...string) *IntCmd func (c cmdable) BitOpAnd(destKey string, keys ...string) *IntCmd func (c cmdable) BitOpOr(destKey string, keys ...string) *IntCmd func (c cmdable) BitOpXor(destKey string, keys ...string) *IntCmd func (c cmdable) BitOpNot(destKey string, key string) *IntCmd func (c cmdable) BitPos(key string, bit int64, pos ...int64) *IntCmd func (c cmdable) BitField(key string, args ...interfacefunc (c cmdable) Decr(key string) *IntCmd func (c cmdable) DecrBy(key string, decrement int64) *IntCmd func (c cmdable) Get(key string) *StringCmd func (c cmdable) GetBit(key string, offset int64) *IntCmd func (c cmdable) GetRange(key string, start, end int64) *StringCmd func (c cmdable) GetSet(key string, value interfacefunc (c cmdable) Incr(key string) *IntCmd func (c cmdable) IncrBy(key string, value int64) *IntCmd func (c cmdable) IncrByFloat(key string, value float64) *FloatCmd func (c cmdable) MGet(keys ...string) *SliceCmd func (c cmdable) MSet(pairs ...interfacefunc (c cmdable) MSetNX(pairs ...interfacefunc (c cmdable) Set(key string, value interfacefunc (c cmdable) SetBit(key string, offset int64, value int) *IntCmd func (c cmdable) SetNX(key string, value interfacefunc (c cmdable) SetXX(key string, value interfacefunc (c cmdable) SetRange(key string, offset int64, value string) *IntCmd func (c cmdable) StrLen(key string) *IntCmd func (c cmdable) HDel(key string, fields ...string) *IntCmd func (c cmdable) HExists(key, field string) *BoolCmd func (c cmdable) HGet(key, field string) *StringCmd func (c cmdable) HGetAll(key string) *StringStringMapCmd func (c cmdable) HIncrBy(key, field string, incr int64) *IntCmd func (c cmdable) HIncrByFloat(key, field string, incr float64) *FloatCmd func (c cmdable) HKeys(key string) *StringSliceCmd func (c cmdable) HLen(key string) *IntCmd func (c cmdable) HMGet(key string, fields ...string) *SliceCmd func (c cmdable) HMSet(key string, fields map[string]interfacefunc (c cmdable) HSet(key, field string, value interfacefunc (c cmdable) HSetNX(key, field string, value interfacefunc (c cmdable) HVals(key string) *StringSliceCmd func (c cmdable) BLPop(timeout time.Duration, keys ...string) *StringSliceCmd func (c cmdable) BRPop(timeout time.Duration, keys ...string) *StringSliceCmd func (c cmdable) BRPopLPush(source, destination string, timeout time.Duration) *StringCmd func (c cmdable) LIndex(key string, index int64) *StringCmd func (c cmdable) LInsert(key, op string, pivot, value interfacefunc (c cmdable) LInsertBefore(key string, pivot, value interfacefunc (c cmdable) LInsertAfter(key string, pivot, value interfacefunc (c cmdable) LLen(key string) *IntCmd func (c cmdable) LPop(key string) *StringCmd func (c cmdable) LPush(key string, values ...interfacefunc (c cmdable) LPushX(key string, values ...interfacefunc (c cmdable) LRange(key string, start, stop int64) *StringSliceCmd func (c cmdable) LRem(key string, count int64, value interfacefunc (c cmdable) LSet(key string, index int64, value interfacefunc (c cmdable) LTrim(key string, start, stop int64) *StatusCmd func (c cmdable) RPop(key string) *StringCmd func (c cmdable) RPopLPush(source, destination string) *StringCmd func (c cmdable) RPush(key string, values ...interfacefunc (c cmdable) RPushX(key string, values ...interfacefunc (c cmdable) SAdd(key string, members ...interfacefunc (c cmdable) SCard(key string) *IntCmd func (c cmdable) SDiff(keys ...string) *StringSliceCmd func (c cmdable) SDiffStore(destination string, keys ...string) *IntCmd func (c cmdable) SInter(keys ...string) *StringSliceCmd func (c cmdable) SInterStore(destination string, keys ...string) *IntCmd func (c cmdable) SIsMember(key string, member interfacefunc (c cmdable) SMembers(key string) *StringSliceCmd func (c cmdable) SMembersMap(key string) *StringStructMapCmd func (c cmdable) SMove(source, destination string, member interfacefunc (c cmdable) SPop(key string) *StringCmd func (c cmdable) SPopN(key string, count int64) *StringSliceCmd func (c cmdable) SRandMember(key string) *StringCmd func (c cmdable) SRandMemberN(key string, count int64) *StringSliceCmd func (c cmdable) SRem(key string, members ...interfacefunc (c cmdable) SUnion(keys ...string) *StringSliceCmd func (c cmdable) SUnionStore(destination string, keys ...string) *IntCmd func (c cmdable) XAdd(a *XAddArgs) *StringCmd func (c cmdable) XDel(stream string, ids ...string) *IntCmd func (c cmdable) XLen(stream string) *IntCmd func (c cmdable) XRange(stream, start, stop string) *XMessageSliceCmd func (c cmdable) XRangeN(stream, start, stop string, count int64) *XMessageSliceCmd func (c cmdable) XRevRange(stream, start, stop string) *XMessageSliceCmd func (c cmdable) XRevRangeN(stream, start, stop string, count int64) *XMessageSliceCmd func (c cmdable) XRead(a *XReadArgs) *XStreamSliceCmd func (c cmdable) XReadStreams(streams ...string) *XStreamSliceCmd func (c cmdable) XGroupCreate(stream, group, start string) *StatusCmd func (c cmdable) XGroupCreateMkStream(stream, group, start string) *StatusCmd func (c cmdable) XGroupSetID(stream, group, start string) *StatusCmd func (c cmdable) XGroupDestroy(stream, group string) *IntCmd func (c cmdable) XGroupDelConsumer(stream, group, consumer string) *IntCmd func (c cmdable) XReadGroup(a *XReadGroupArgs) *XStreamSliceCmd func (c cmdable) XAck(stream, group string, ids ...string) *IntCmd func (c cmdable) XPending(stream, group string) *XPendingCmd func (c cmdable) XPendingExt(a *XPendingExtArgs) *XPendingExtCmd func (c cmdable) XClaim(a *XClaimArgs) *XMessageSliceCmd func (c cmdable) XClaimJustID(a *XClaimArgs) *StringSliceCmd func (c cmdable) XTrim(key string, maxLen int64) *IntCmd func (c cmdable) XTrimApprox(key string, maxLen int64) *IntCmd func (c cmdable) XInfoGroups(key string) *XInfoGroupsCmd func (c cmdable) BZPopMax(timeout time.Duration, keys ...string) *ZWithKeyCmd func (c cmdable) BZPopMin(timeout time.Duration, keys ...string) *ZWithKeyCmd func (c cmdable) zAdd(a []interfacefunc (c cmdable) ZAdd(key string, members ...*Z) *IntCmd func (c cmdable) ZAddNX(key string, members ...*Z) *IntCmd func (c cmdable) ZAddXX(key string, members ...*Z) *IntCmd func (c cmdable) ZAddCh(key string, members ...*Z) *IntCmd func (c cmdable) ZAddNXCh(key string, members ...*Z) *IntCmd func (c cmdable) ZAddXXCh(key string, members ...*Z) *IntCmd func (c cmdable) zIncr(a []interfacefunc (c cmdable) ZIncr(key string, member *Z) *FloatCmd func (c cmdable) ZIncrNX(key string, member *Z) *FloatCmd func (c cmdable) ZIncrXX(key string, member *Z) *FloatCmd func (c cmdable) ZCard(key string) *IntCmd func (c cmdable) ZCount(key, min, max string) *IntCmd func (c cmdable) ZLexCount(key, min, max string) *IntCmd func (c cmdable) ZIncrBy(key string, increment float64, member string) *FloatCmd func (c cmdable) ZInterStore(destination string, store *ZStore) *IntCmd func (c cmdable) ZPopMax(key string, count ...int64) *ZSliceCmd func (c cmdable) ZPopMin(key string, count ...int64) *ZSliceCmd func (c cmdable) zRange(key string, start, stop int64, withScores bool) *StringSliceCmd func (c cmdable) ZRange(key string, start, stop int64) *StringSliceCmd func (c cmdable) ZRangeWithScores(key string, start, stop int64) *ZSliceCmd func (c cmdable) zRangeBy(zcmd, key string, opt *ZRangeBy, withScores bool) *StringSliceCmd func (c cmdable) ZRangeByScore(key string, opt *ZRangeBy) *StringSliceCmd func (c cmdable) ZRangeByLex(key string, opt *ZRangeBy) *StringSliceCmd func (c cmdable) ZRangeByScoreWithScores(key string, opt *ZRangeBy) *ZSliceCmd func (c cmdable) ZRank(key, member string) *IntCmd func (c cmdable) ZRem(key string, members ...interfacefunc (c cmdable) ZRemRangeByRank(key string, start, stop int64) *IntCmd func (c cmdable) ZRemRangeByScore(key, min, max string) *IntCmd func (c cmdable) ZRemRangeByLex(key, min, max string) *IntCmd func (c cmdable) ZRevRange(key string, start, stop int64) *StringSliceCmd func (c cmdable) ZRevRangeWithScores(key string, start, stop int64) *ZSliceCmd func (c cmdable) zRevRangeBy(zcmd, key string, opt *ZRangeBy) *StringSliceCmd func (c cmdable) ZRevRangeByScore(key string, opt *ZRangeBy) *StringSliceCmd func (c cmdable) ZRevRangeByLex(key string, opt *ZRangeBy) *StringSliceCmd func (c cmdable) ZRevRangeByScoreWithScores(key string, opt *ZRangeBy) *ZSliceCmd func (c cmdable) ZRevRank(key, member string) *IntCmd func (c cmdable) ZScore(key, member string) *FloatCmd func (c cmdable) ZUnionStore(dest string, store *ZStore) *IntCmd func (c cmdable) PFAdd(key string, els ...interfacefunc (c cmdable) PFCount(keys ...string) *IntCmd func (c cmdable) PFMerge(dest string, keys ...string) *StatusCmd func (c cmdable) BgRewriteAOF() *StatusCmd func (c cmdable) BgSave() *StatusCmd func (c cmdable) ClientKill(ipPort string) *StatusCmd func (c cmdable) ClientKillByFilter(keys ...string) *IntCmd func (c cmdable) ClientList() *StringCmd func (c cmdable) ClientPause(dur time.Duration) *BoolCmd func (c cmdable) ClientID() *IntCmd func (c cmdable) ClientUnblock(id int64) *IntCmd func (c cmdable) ClientUnblockWithError(id int64) *IntCmd func (c cmdable) ClientGetName() *StringCmd func (c cmdable) ConfigGet(parameter string) *SliceCmd func (c cmdable) ConfigResetStat() *StatusCmd func (c cmdable) ConfigSet(parameter, value string) *StatusCmd func (c cmdable) ConfigRewrite() *StatusCmd func (c cmdable) DbSize() *IntCmd func (c cmdable) DBSize() *IntCmd func (c cmdable) FlushAll() *StatusCmd func (c cmdable) FlushAllAsync() *StatusCmd func (c cmdable) FlushDB() *StatusCmd func (c cmdable) FlushDBAsync() *StatusCmd func (c cmdable) Info(section ...string) *StringCmd func (c cmdable) LastSave() *IntCmd func (c cmdable) Save() *StatusCmd func (c cmdable) shutdown(modifier string) *StatusCmd func (c cmdable) Shutdown() *StatusCmd func (c cmdable) ShutdownSave() *StatusCmd func (c cmdable) ShutdownNoSave() *StatusCmd func (c cmdable) SlaveOf(host, port string) *StatusCmd func (c cmdable) SlowLog() func (c cmdable) Sync() func (c cmdable) Time() *TimeCmd func (c cmdable) Eval(script string, keys []string, args ...interfacefunc (c cmdable) EvalSha(sha1 string, keys []string, args ...interfacefunc (c cmdable) ScriptExists(hashes ...string) *BoolSliceCmd func (c cmdable) ScriptFlush() *StatusCmd func (c cmdable) ScriptKill() *StatusCmd func (c cmdable) ScriptLoad(script string) *StringCmd func (c cmdable) DebugObject(key string) *StringCmd func (c cmdable) Publish(channel string, message interfacefunc (c cmdable) PubSubChannels(pattern string) *StringSliceCmd func (c cmdable) PubSubNumSub(channels ...string) *StringIntMapCmd func (c cmdable) PubSubNumPat() *IntCmd func (c cmdable) ClusterSlots() *ClusterSlotsCmd func (c cmdable) ClusterNodes() *StringCmd func (c cmdable) ClusterMeet(host, port string) *StatusCmd func (c cmdable) ClusterForget(nodeID string) *StatusCmd func (c cmdable) ClusterReplicate(nodeID string) *StatusCmd func (c cmdable) ClusterResetSoft() *StatusCmd func (c cmdable) ClusterResetHard() *StatusCmd func (c cmdable) ClusterInfo() *StringCmd func (c cmdable) ClusterKeySlot(key string) *IntCmd func (c cmdable) ClusterGetKeysInSlot(slot int, count int) *StringSliceCmd func (c cmdable) ClusterCountFailureReports(nodeID string) *IntCmd func (c cmdable) ClusterCountKeysInSlot(slot int) *IntCmd func (c cmdable) ClusterDelSlots(slots ...int) *StatusCmd func (c cmdable) ClusterDelSlotsRange(min, max int) *StatusCmd func (c cmdable) ClusterSaveConfig() *StatusCmd func (c cmdable) ClusterSlaves(nodeID string) *StringSliceCmd func (c cmdable) ReadOnly() *StatusCmd func (c cmdable) ReadWrite() *StatusCmd func (c cmdable) ClusterFailover() *StatusCmd func (c cmdable) ClusterAddSlots(slots ...int) *StatusCmd func (c cmdable) ClusterAddSlotsRange(min, max int) *StatusCmd func (c cmdable) GeoAdd(key string, geoLocation ...*GeoLocation) *IntCmd func (c cmdable) GeoRadius(key string, longitude, latitude float64, query *GeoRadiusQuery) *GeoLocationCmd func (c cmdable) GeoRadiusStore(key string, longitude, latitude float64, query *GeoRadiusQuery) *IntCmd func (c cmdable) GeoRadiusByMember(key, member string, query *GeoRadiusQuery) *GeoLocationCmd func (c cmdable) GeoRadiusByMemberStore(key, member string, query *GeoRadiusQuery) *IntCmd func (c cmdable) GeoDist(key string, member1, member2, unit string) *FloatCmd func (c cmdable) GeoHash(key string, members ...string) *StringSliceCmd func (c cmdable) GeoPos(key string, members ...string) *GeoPosCmd func (c cmdable) MemoryUsage(key string, samples ...int) *IntCmd 
+<h4 id='statefulCmdable'>statefulCmdable</h4>
+type statefulCmdable func(cmd Cmder) error
+
+func (c statefulCmdable) Auth(password string) *StatusCmd func (c statefulCmdable) Select(index int) *StatusCmd func (c statefulCmdable) SwapDB(index1, index2 int) *StatusCmd func (c statefulCmdable) ClientSetName(name string) *BoolCmd 
+<h4 id='Sort'>Sort</h4>
+type Sort struct {
+	By            string
+	Offset, Count int64
+	Get           []string
+	Order         string
+	Alpha         bool
+}
+
+func (sort *Sort) args(key string) []interface
+<h4 id='BitCount'>BitCount</h4>
+type BitCount struct {
+	Start, End int64
+}
+
+
+<h4 id='XAddArgs'>XAddArgs</h4>
+type XAddArgs struct {
+	Stream       string
+	MaxLen       int64 // MAXLEN N
+	MaxLenApprox int64 // MAXLEN ~ N
+	ID           string
+	Values       map[string]interface{}
+}
+
+
+<h4 id='XReadArgs'>XReadArgs</h4>
+type XReadArgs struct {
+	Streams []string
+	Count   int64
+	Block   time.Duration
+}
+
+
+<h4 id='XReadGroupArgs'>XReadGroupArgs</h4>
+type XReadGroupArgs struct {
+	Group    string
+	Consumer string
+	Streams  []string // list of streams and ids, e.g. stream1 stream2 id1 id2
+	Count    int64
+	Block    time.Duration
+	NoAck    bool
+}
+
+
+<h4 id='XPendingExtArgs'>XPendingExtArgs</h4>
+type XPendingExtArgs struct {
+	Stream   string
+	Group    string
+	Start    string
+	End      string
+	Count    int64
+	Consumer string
+}
+
+
+<h4 id='XClaimArgs'>XClaimArgs</h4>
+type XClaimArgs struct {
+	Stream   string
+	Group    string
+	Consumer string
+	MinIdle  time.Duration
+	Messages []string
+}
+
+
+<h4 id='Z'>Z</h4>
+// Z represents sorted set member.
+type Z struct {
+	Score  float64
+	Member interface{}
+}
+
+
+<h4 id='ZWithKey'>ZWithKey</h4>
+// ZWithKey represents sorted set member including the name of the key where it was popped.
+type ZWithKey struct {
+	Z
+	Key string
+}
+
+
+<h4 id='ZStore'>ZStore</h4>
+// ZStore is used as an arg to ZInterStore and ZUnionStore.
+type ZStore struct {
+	Keys    []string
+	Weights []float64
+	// Can be SUM, MIN or MAX.
+	Aggregate string
+}
+
+
+<h4 id='ZRangeBy'>ZRangeBy</h4>
+type ZRangeBy struct {
+	Min, Max      string
+	Offset, Count int64
+}
+
+</code></pre>

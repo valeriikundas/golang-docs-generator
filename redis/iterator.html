@@ -1,0 +1,10 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><h3>Functions</h3><h3>Classes</h3><pre><code><h4 id='ScanIterator'>ScanIterator</h4>
+// ScanIterator is used to incrementally iterate over a collection of elements.
+// It's safe for concurrent use by multiple goroutines.
+type ScanIterator struct {
+	mu  sync.Mutex // protects Scanner and pos
+	cmd *ScanCmd
+	pos int
+}
+
+func (it *ScanIterator) Err() error func (it *ScanIterator) Next() bool func (it *ScanIterator) Val() string </code></pre>

@@ -1,0 +1,16 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><h3>Functions</h3><h3>Classes</h3><pre><code><h4 id='Tx'>Tx</h4>
+// Tx implements Redis transactions as described in
+// http://redis.io/topics/transactions. It's NOT safe for concurrent use
+// by multiple goroutines, because Exec resets list of watched keys.
+// If you don't need WATCH it is better to use Pipeline.
+type Tx struct {
+	baseClient
+	cmdable
+	statefulCmdable
+	ctx context.Context
+}
+
+func (c *Tx) init() func (c *Tx) Context() context.Context func (c *Tx) WithContext(ctx context.Context) *Tx func (c *Tx) Process(cmd Cmder) error func (c *Tx) ProcessContext(ctx context.Context, cmd Cmder) error func (c *Tx) Close() error func (c *Tx) Watch(keys ...string) *StatusCmd func (c *Tx) Unwatch(keys ...string) *StatusCmd func (c *Tx) Pipeline() Pipeliner func (c *Tx) Pipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Tx) TxPipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Tx) TxPipeline() Pipeliner 
+<h4 id='Client'>Client</h4>
+func (c *Client) newTx(ctx context.Context) *Tx 
+func (c *Client) Watch(fn func(*Tx) error, keys ...string) error func (c *Client) WatchContext(ctx context.Context, fn func(*Tx) error, keys ...string) error </code></pre>

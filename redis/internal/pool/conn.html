@@ -1,0 +1,16 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var noDeadline = time.Time{}
+</code></pre><h3>Functions</h3><pre><code>func NewConn(netConn net.Conn) *Conn 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Conn'>Conn</h4>
+type Conn struct {
+	netConn net.Conn
+
+	rd *proto.Reader
+	wr *proto.Writer
+
+	Inited    bool
+	pooled    bool
+	createdAt time.Time
+	usedAt    int64 // atomic
+}
+
+func (cn *Conn) UsedAt() time.Time func (cn *Conn) SetUsedAt(tm time.Time) func (cn *Conn) SetNetConn(netConn net.Conn) func (cn *Conn) Write(b []byte) (int, error) func (cn *Conn) RemoteAddr() net.Addr func (cn *Conn) WithReader(ctx context.Context, timeout time.Duration, fn func(rd *proto.Reader) error) error func (cn *Conn) Close() error func (cn *Conn) deadline(ctx context.Context, timeout time.Duration) time.Time </code></pre>

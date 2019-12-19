@@ -1,0 +1,26 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><pre><code>const (
+	stateDefault = 0
+	stateInited  = 1
+	stateClosed  = 2
+)
+</code></pre><h3>Variables</h3><pre><code>var _ error = (*BadConnError)(nil)
+</code></pre><pre><code>var _ Pooler = (*SingleConnPool)(nil)
+</code></pre><h3>Functions</h3><pre><code>func NewSingleConnPool(pool Pooler) *SingleConnPool 
+</code></pre><h3>Classes</h3><pre><code><h4 id='BadConnError'>BadConnError</h4>
+type BadConnError struct {
+	wrapped error
+}
+
+func (e BadConnError) Error() string func (e BadConnError) Unwrap() error 
+<h4 id='SingleConnPool'>SingleConnPool</h4>
+type SingleConnPool struct {
+	pool  Pooler
+	level int32 // atomic
+
+	state uint32 // atomic
+	ch    chan *Conn
+
+	_badConnError atomic.Value
+}
+
+func (p *SingleConnPool) SetConn(cn *Conn) func (p *SingleConnPool) NewConn(ctx context.Context) (*Conn, error) func (p *SingleConnPool) CloseConn(cn *Conn) error func (p *SingleConnPool) Get(ctx context.Context) (*Conn, error) func (p *SingleConnPool) Put(cn *Conn) func (p *SingleConnPool) freeConn(cn *Conn) func (p *SingleConnPool) Remove(cn *Conn, reason error) func (p *SingleConnPool) Len() int func (p *SingleConnPool) IdleLen() int func (p *SingleConnPool) Stats() *Stats func (p *SingleConnPool) Close() error func (p *SingleConnPool) Reset() error func (p *SingleConnPool) badConnError() error </code></pre>

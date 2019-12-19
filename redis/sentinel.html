@@ -1,0 +1,68 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><h3>Functions</h3><pre><code>// NewFailoverClient returns a Redis client that uses Redis Sentinel
+// for automatic failover. It's safe for concurrent use by multiple
+// goroutines.
+func NewFailoverClient(failoverOpt *FailoverOptions) *Client 
+</code></pre><pre><code>func NewSentinelClient(opt *Options) *SentinelClient 
+</code></pre><pre><code>func contains(slice []string, str string) bool 
+</code></pre><h3>Classes</h3><pre><code><h4 id='FailoverOptions'>FailoverOptions</h4>
+// FailoverOptions are used to configure a failover client and should
+// be passed to NewFailoverClient.
+type FailoverOptions struct {
+	// The master name.
+	MasterName string
+	// A seed list of host:port addresses of sentinel nodes.
+	SentinelAddrs    []string
+	SentinelPassword string
+
+	// Following options are copied from Options struct.
+
+	Dialer    func(ctx context.Context, network, addr string) (net.Conn, error)
+	OnConnect func(*Conn) error
+
+	Password string
+	DB       int
+
+	MaxRetries      int
+	MinRetryBackoff time.Duration
+	MaxRetryBackoff time.Duration
+
+	DialTimeout  time.Duration
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
+
+	TLSConfig *tls.Config
+}
+
+func (opt *FailoverOptions) options() *Options 
+<h4 id='SentinelClient'>SentinelClient</h4>
+type SentinelClient struct {
+	*baseClient
+	ctx context.Context
+}
+
+func (c *SentinelClient) Context() context.Context func (c *SentinelClient) WithContext(ctx context.Context) *SentinelClient func (c *SentinelClient) Process(cmd Cmder) error func (c *SentinelClient) ProcessContext(ctx context.Context, cmd Cmder) error func (c *SentinelClient) pubSub() *PubSub func (c *SentinelClient) Ping() *StringCmd func (c *SentinelClient) Subscribe(channels ...string) *PubSub func (c *SentinelClient) PSubscribe(channels ...string) *PubSub func (c *SentinelClient) GetMasterAddrByName(name string) *StringSliceCmd func (c *SentinelClient) Sentinels(name string) *SliceCmd func (c *SentinelClient) Failover(name string) *StatusCmd func (c *SentinelClient) Reset(pattern string) *IntCmd func (c *SentinelClient) FlushConfig() *StatusCmd func (c *SentinelClient) Master(name string) *StringStringMapCmd func (c *SentinelClient) Masters() *SliceCmd func (c *SentinelClient) Slaves(name string) *SliceCmd func (c *SentinelClient) CkQuorum(name string) *StringCmd func (c *SentinelClient) Monitor(name, ip, port, quorum string) *StringCmd func (c *SentinelClient) Set(name, option, value string) *StringCmd func (c *SentinelClient) Remove(name string) *StringCmd 
+<h4 id='sentinelFailover'>sentinelFailover</h4>
+type sentinelFailover struct {
+	sentinelAddrs []string
+
+	opt      *Options
+	password string
+
+	pool     *pool.ConnPool
+	poolOnce sync.Once
+
+	mu          sync.RWMutex
+	masterName  string
+	_masterAddr string
+	sentinel    *SentinelClient
+	pubsub      *PubSub
+}
+
+func (c *sentinelFailover) Close() error func (c *sentinelFailover) closeSentinel() error func (c *sentinelFailover) Pool() *pool.ConnPool func (c *sentinelFailover) dial(ctx context.Context, network, _ string) (net.Conn, error) func (c *sentinelFailover) MasterAddr() (string, error) func (c *sentinelFailover) masterAddr() (string, error) func (c *sentinelFailover) getMasterAddr(sentinel *SentinelClient) string func (c *sentinelFailover) switchMaster(addr string) func (c *sentinelFailover) setSentinel(sentinel *SentinelClient) func (c *sentinelFailover) discoverSentinels() func (c *sentinelFailover) listen(pubsub *PubSub) </code></pre>

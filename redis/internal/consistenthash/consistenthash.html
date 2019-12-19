@@ -1,0 +1,14 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><h3>Functions</h3><pre><code>func New(replicas int, fn Hash) *Map 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Hash'>Hash</h4>
+type Hash func(data []byte) uint32
+
+
+<h4 id='Map'>Map</h4>
+type Map struct {
+	hash     Hash
+	replicas int
+	keys     []int // Sorted
+	hashMap  map[int]string
+}
+
+func (m *Map) IsEmpty() bool func (m *Map) Add(keys ...string) func (m *Map) Get(key string) string </code></pre>

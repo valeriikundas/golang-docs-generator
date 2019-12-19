@@ -1,0 +1,11 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>// CRC16 implementation according to CCITT standards.
+// Copyright 2001-2010 Georges Menie (www.menie.org)
+// Copyright 2013 The Go Authors. All rights reserved.
+// http://redis.io/topics/cluster-spec#appendix-a-crc16-reference-implementation-in-ansi-c
+var crc16tab = [256]uint16{
+</code></pre><h3>Functions</h3><pre><code>func Key(key string) string 
+</code></pre><pre><code>func RandomSlot() int 
+</code></pre><pre><code>// hashSlot returns a consistent slot number between 0 and 16383
+// for any given string key.
+func Slot(key string) int 
+</code></pre><h3>Classes</h3><pre><code></code></pre>

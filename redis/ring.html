@@ -1,0 +1,124 @@
+<a href="content.html">back</a><br><pre><code></code></pre><h3>Constants</h3><h3>Variables</h3><pre><code>var errRingShardsDown = errors.New("redis: all ring shards are down")
+</code></pre><h3>Functions</h3><pre><code>func newRingShards(opt *RingOptions) *ringShards 
+</code></pre><pre><code>func NewRing(opt *RingOptions) *Ring 
+</code></pre><pre><code>func newRingShard(opt *RingOptions, name, addr string) *Client 
+</code></pre><pre><code>func newConsistentHash(opt *RingOptions) *consistenthash.Map 
+</code></pre><h3>Classes</h3><pre><code><h4 id='Hash'>Hash</h4>
+// Hash is type of hash function used in consistent hash.
+type Hash consistenthash.Hash
+
+
+<h4 id='RingOptions'>RingOptions</h4>
+// RingOptions are used to configure a ring client and should be
+// passed to NewRing.
+type RingOptions struct {
+	// Map of name => host:port addresses of ring shards.
+	Addrs map[string]string
+
+	// Map of name => password of ring shards, to allow different shards to have
+	// different passwords. It will be ignored if the Password field is set.
+	Passwords map[string]string
+
+	// Frequency of PING commands sent to check shards availability.
+	// Shard is considered down after 3 subsequent failed checks.
+	HeartbeatFrequency time.Duration
+
+	// Hash function used in consistent hash.
+	// Default is crc32.ChecksumIEEE.
+	Hash Hash
+
+	// Number of replicas in consistent hash.
+	// Default is 100 replicas.
+	//
+	// Higher number of replicas will provide less deviation, that is keys will be
+	// distributed to nodes more evenly.
+	//
+	// Following is deviation for common nreplicas:
+	//  --------------------------------------------------------
+	//  | nreplicas | standard error | 99% confidence interval |
+	//  |     10    |     0.3152     |      (0.37, 1.98)       |
+	//  |    100    |     0.0997     |      (0.76, 1.28)       |
+	//  |   1000    |     0.0316     |      (0.92, 1.09)       |
+	//  --------------------------------------------------------
+	//
+	//  See https://arxiv.org/abs/1406.2294 for reference
+	HashReplicas int
+
+	// Optional hook that is called when a new shard is created.
+	OnNewShard func(*Client)
+
+	// Following options are copied from Options struct.
+
+	OnConnect func(*Conn) error
+
+	DB       int
+	Password string
+
+	MaxRetries      int
+	MinRetryBackoff time.Duration
+	MaxRetryBackoff time.Duration
+
+	DialTimeout  time.Duration
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+
+	PoolSize           int
+	MinIdleConns       int
+	MaxConnAge         time.Duration
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
+}
+
+func (opt *RingOptions) init() func (opt *RingOptions) clientOptions(shard string) *Options func (opt *RingOptions) getPassword(shard string) string 
+<h4 id='ringShard'>ringShard</h4>
+type ringShard struct {
+	Client *Client
+	down   int32
+}
+
+func (shard *ringShard) String() string func (shard *ringShard) IsDown() bool func (shard *ringShard) IsUp() bool func (shard *ringShard) Vote(up bool) bool 
+<h4 id='ringShards'>ringShards</h4>
+type ringShards struct {
+	opt *RingOptions
+
+	mu     sync.RWMutex
+	hash   *consistenthash.Map
+	shards map[string]*ringShard // read only
+	list   []*ringShard          // read only
+	len    int
+	closed bool
+}
+
+func (c *ringShards) Add(name string, cl *Client) func (c *ringShards) List() []*ringShard func (c *ringShards) Hash(key string) string func (c *ringShards) GetByKey(key string) (*ringShard, error) func (c *ringShards) GetByHash(name string) (*ringShard, error) func (c *ringShards) Random() (*ringShard, error) func (c *ringShards) Heartbeat(frequency time.Duration) func (c *ringShards) rebalance() func (c *ringShards) Len() int func (c *ringShards) Close() error 
+<h4 id='ring'>ring</h4>
+type ring struct {
+	opt           *RingOptions
+	shards        *ringShards
+	cmdsInfoCache *cmdsInfoCache //nolint:structcheck
+}
+
+
+<h4 id='Ring'>Ring</h4>
+// Ring is a Redis client that uses consistent hashing to distribute
+// keys across multiple Redis servers (shards). It's safe for
+// concurrent use by multiple goroutines.
+//
+// Ring monitors the state of each shard and removes dead shards from
+// the ring. When a shard comes online it is added back to the ring. This
+// gives you maximum availability and partition tolerance, but no
+// consistency between different shards or even clients. Each client
+// uses shards that are available to the client and does not do any
+// coordination when shard state is changed.
+//
+// Ring should be used when you need multiple Redis servers for caching
+// and can tolerate losing data when one of the servers dies.
+// Otherwise you should use Redis Cluster.
+type Ring struct {
+	*ring
+	cmdable
+	hooks
+	ctx context.Context
+}
+
+func (c *Ring) Context() context.Context func (c *Ring) WithContext(ctx context.Context) *Ring func (c *Ring) Do(args ...interfacefunc (c *Ring) DoContext(ctx context.Context, args ...interfacefunc (c *Ring) Process(cmd Cmder) error func (c *Ring) ProcessContext(ctx context.Context, cmd Cmder) error func (c *Ring) Options() *RingOptions func (c *Ring) retryBackoff(attempt int) time.Duration func (c *Ring) PoolStats() *PoolStats func (c *Ring) Len() int func (c *Ring) Subscribe(channels ...string) *PubSub func (c *Ring) PSubscribe(channels ...string) *PubSub func (c *Ring) ForEachShard(fn func(client *Client) error) error func (c *Ring) cmdsInfo() (map[string]*CommandInfo, error) func (c *Ring) cmdInfo(name string) *CommandInfo func (c *Ring) cmdShard(cmd Cmder) (*ringShard, error) func (c *Ring) process(ctx context.Context, cmd Cmder) error func (c *Ring) _process(ctx context.Context, cmd Cmder) error func (c *Ring) Pipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Ring) Pipeline() Pipeliner func (c *Ring) processPipeline(ctx context.Context, cmds []Cmder) error func (c *Ring) TxPipelined(fn func(Pipeliner) error) ([]Cmder, error) func (c *Ring) TxPipeline() Pipeliner func (c *Ring) processTxPipeline(ctx context.Context, cmds []Cmder) error func (c *Ring) Close() error func (c *Ring) Watch(fn func(*Tx) error, keys ...string) error </code></pre>
